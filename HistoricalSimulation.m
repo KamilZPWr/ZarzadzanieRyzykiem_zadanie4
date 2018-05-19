@@ -41,11 +41,5 @@ plot(DateReturns(1501:end),[Historical95 Historical99])
 plot(DateReturns(1501:end), Returns(1501:2000))
 ylabel('VaR')
 xlabel('Data')
-legend({'95% poziom unfoœci','99% poziom unfoœci'},'Location','Best')
+legend({'95% poziom unfoœci','99% poziom unfoœci', 'Stopa zwrotu'},'Location','Best')
 title('VaR przy u¿yciu zwyk³ej metody historycznej')
-
-ReturnsTest = Returns(TestWindow);
-
-vbt = varbacktest(ReturnsTest,[Historical95 Historical99],'PortfolioID','S&P','VaRID',...
-    {'Normal95','Normal99'},'VaRLevel',[0.95 0.99]);
-summary(vbt)
