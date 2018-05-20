@@ -12,8 +12,6 @@ TestWindow           = TestWindowStart : SampleSize;
 EstimationWindowSize = 1500;
 
 pVaR = [0.95 0.99];
-
-Zscore   = tinv(pVaR,1:2);
 T95 = zeros(length(TestWindow),1);
 T99 = zeros(length(TestWindow),1);
 
@@ -21,9 +19,12 @@ T99 = zeros(length(TestWindow),1);
 for t = TestWindow
     i = t - TestWindowStart + 1;
     EstimationWindow = t-EstimationWindowSize:t-1;
-    Sigma = std(Returns(EstimationWindow));
-    T95(i) = Zscore(1)*Sigma;
-    T99(i) = Zscore(2)*Sigma;
+    X = Returns(EstimationWindow);
+    sigma = std(Returns(EstimationWindow));
+    parameters = mle(X,'distribution','tlocationscale');
+    Zscore   = tinv(pVaR,parameters(3));
+    T95(i) = Zscore(1)*sigma;
+    T99(i) = Zscore(2)*sigma;
 end
 
 figure;
