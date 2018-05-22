@@ -34,12 +34,21 @@ roll11 <- ugarchroll(gspec11, X, n.start=501,
 Returns <- X[502:2001]  
 
 VaRGARCH_99 <- -roll11@forecast$VaR[,1]             
-VaRGARCH_95 <- -roll11@forecast$VaR[,2] 
-#VaRStatic <- sd(Returns) * qnorm(0.05)   
+VaRGARCH_95 <- -roll11@forecast$VaR[,2]
 
-
-plot(rates,time, type = "l", ylab='Stopa zwrotu', col = 'grey50',
+plot(time,rates, type = "l", ylab='Stopa zwrotu', col = 'grey50',
      ylim=c(-max(rates)-0.005, max(rates)+0.005),
      main=' ')
-lines(rates[502:2001], VaRGARCH_99, col = 'green')
-lines(rates[502:2001], VaRGARCH_95, col = 'orange')
+lines(time[1501:2001], VaRGARCH_99, col = 'green')
+lines(time[1501:2001], VaRGARCH_95, col = 'orange')
+
+count99 <- sum(Returns > VaRGARCH_99)
+(count99/500)*100
+count95 <- sum(Returns > VaRGARCH_95)
+(count95/500)*100
+
+#testowanie wsteczne
+mean(Returns>VaRGARCH_95)
+mean(Returns>VaRGARCH_99)
+BacktestVaR(Returns, VaRGARCH_95, 0.95)
+BacktestVaR(Returns, VaRGARCH_99, 0.99)
