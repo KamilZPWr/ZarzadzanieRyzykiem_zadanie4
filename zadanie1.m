@@ -23,16 +23,26 @@ T99 = zeros(length(TestWindow),1);
 plot(x,F);
 hold on
 plot(x,normcdf(x,0,0.0133))
-title('Porównanie dystrybuant')
+title('Porównanie dystrybuanty z rozk³adem normalnym')
+
 %Dystrybuanta r. t-Studenta
 figure
-x = -10:0.001:10;
-y = tcdf(x,4.0343);
-z = normcdf(x,0,1);
-plot(x,y,'-',x,z,'-.')
+mu = 0;
+sigma = 0.0133;
+pd = makedist('Normal',mu,sigma);
+x = [-1:0.001:1];
+cdf_normal = cdf(pd,x);
+plot(x,cdf_normal)
+hold on
+a = makedist('tLocationScale','mu',0,'sigma',0.0133,'nu',4.0343);
+cdf_t = cdf(a,x);
+plot(x,cdf_t);
+title('Porównanie dystrybuanty z rozk³adem t-Studenta')
+
 %Kstest
 test_cdf = makedist('tlocationscale','mu',0,'sigma',0.0133,'nu',4.0343);
 [h,p] = kstest(Returns,'CDF',test_cdf,'Alpha',0.01)
+
 
 for t = TestWindow
     i = t - TestWindowStart + 1;
