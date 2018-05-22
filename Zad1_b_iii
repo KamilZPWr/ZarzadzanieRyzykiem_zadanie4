@@ -36,11 +36,12 @@ Returns <- X[502:2001]
 VaRGARCH_99 <- -roll11@forecast$VaR[,1]             
 VaRGARCH_95 <- -roll11@forecast$VaR[,2]
 
-plot(time,rates, type = "l", ylab='Stopa zwrotu', col = 'grey50',
+plot(time[1501:2001],rates[1501:2001], type = "l", ylab='VaR', xlab='Data', col = 'orange',
      ylim=c(-max(rates)-0.005, max(rates)+0.005),
      main=' ')
-lines(time[1501:2001], VaRGARCH_99, col = 'green')
-lines(time[1501:2001], VaRGARCH_95, col = 'orange')
+lines(time[1501:2001], VaRGARCH_99, col = 'red')
+lines(time[1501:2001], VaRGARCH_95, col = 'blue')
+title('Estymacja wartości zagrożonej dla metody historycznej przy użyciu filtrowania szeregiem GARCH')
 
 count99 <- sum(Returns > VaRGARCH_99)
 (count99/500)*100
@@ -50,5 +51,10 @@ count95 <- sum(Returns > VaRGARCH_95)
 #testowanie wsteczne
 mean(Returns>VaRGARCH_95)
 mean(Returns>VaRGARCH_99)
-BacktestVaR(Returns, VaRGARCH_95, 0.95)
-BacktestVaR(Returns, VaRGARCH_99, 0.99)
+tests95 <- BacktestVaR(Returns, VaRGARCH_95, 0.95)
+tests99 <- BacktestVaR(Returns, VaRGARCH_99, 0.99)
+
+(testofKupiec95 <- tests95$LRuc)
+(testofChristoffesen95 <- tests95$LRcc)
+(testofKupiec99 <- tests99$LRuc)
+(testofChristoffesen99 <- tests99$LRcc)
