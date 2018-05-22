@@ -18,12 +18,18 @@ T95 = zeros(length(TestWindow),1);
 T99 = zeros(length(TestWindow),1);
 
 %Sprawdzenie s³usznoœci wyboru rozk³adu t-Studenta
-%Dystrybuanta
+%Dystrybuanta r. normalnego
 [F,x] = ecdf(Returns); 
 plot(x,F);
 hold on
 plot(x,normcdf(x,0,0.0133))
 title('Porównanie dystrybuant')
+%Dystrybuanta r. t-Studenta
+figure
+x = -10:0.001:10;
+y = tcdf(x,4.0343);
+z = normcdf(x,0,1);
+plot(x,y,'-',x,z,'-.')
 %Kstest
 test_cdf = makedist('tlocationscale','mu',0,'sigma',0.0133,'nu',4.0343);
 [h,p] = kstest(Returns,'CDF',test_cdf,'Alpha',0.01)
@@ -59,3 +65,8 @@ title('Estymacja wartoœci zagro¿onej dla metody parametrycznej')
  end
  (count95/500)*100
  (count99/500)*100
+ 
+ %Zapisanie danych do póŸniejszego testowania
+dlmwrite('dane.txt',Returns(1501:2000))
+dlmwrite('VaR95.txt',T95)
+dlmwrite('VaR99.txt',T99)
