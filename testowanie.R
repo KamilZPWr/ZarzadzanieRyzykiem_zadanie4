@@ -9,5 +9,7 @@ dane <- as.numeric(unlist(dane))
 VaR95 <- as.numeric(unlist(VaR95))
 VaR99 <- as.numeric(unlist(VaR99))
 
-BacktestVaR(-dane, VaR95, 0.95)
-BacktestVaR(-dane, VaR99, 0.01)
+BacktestVaR(-dane, VaR95, 0.95)$LRuc
+BacktestVaR(-dane, VaR95, 0.95)$Lrcc
+BacktestVaR(-dane, VaR99, 0.99)$LRuc
+BacktestVaR(-dane, VaR99, 0.99)$LRcc
