@@ -1,0 +1,45 @@
+library(GAS)
+library(rugarch)
+library(fGarch) # e.g. garchFit()
+
+
+data <- read.table("C:/Users/Magda/Downloads/data.txt")
+#date <- as.Date(data$V1)
+prices <- data$V2
+time <- data$V1
+
+plot(data,type='l', main='Dane', ylab='Ceny', cex.main=0.8, cex.lab=0.8)
+
+prices <- prices[157:2158]
+rates <- (prices[2:2002]-prices[1:2001])/prices[1:2001]*100
+time <- time[158:2158]
+time <- as.Date(time)
+windowsize <- 1500                                                 
+
+plot(rates, type='l')
+
+
+X <- -rates 
+
+gspec11 <- ugarchspec(variance.model = list(model = "sGARCH", 
+                                            garchOrder = c(1, 1)),
+                      mean.model=list(armaOrder=c(0,0), 
+                                      include.mean = FALSE), 
+                      distribution="norm")
+
+roll11 <- ugarchroll(gspec11, X, n.start=501,
+                     refit.every = 10, refit.window = "moving",
+                     VaR.alpha = c(0.01, 0.05))
+
+Returns <- X[502:2001]  
+
+VaRGARCH_99 <- -roll11@forecast$VaR[,1]             
+VaRGARCH_95 <- -roll11@forecast$VaR[,2] 
+#VaRStatic <- sd(Returns) * qnorm(0.05)   
+
+
+plot(rates,time, type = "l", ylab='Stopa zwrotu', col = 'grey50',
+     ylim=c(-max(rates)-0.005, max(rates)+0.005),
+     main=' ')
+lines(rates[502:2001], VaRGARCH_99, col = 'green')
+lines(rates[502:2001], VaRGARCH_95, col = 'orange')
