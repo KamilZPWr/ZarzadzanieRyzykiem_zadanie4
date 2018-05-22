@@ -27,12 +27,8 @@ title('Porównanie dystrybuanty z rozk³adem normalnym')
 
 %Dystrybuanta r. t-Studenta
 figure
-mu = 0;
-sigma = 0.0133;
-pd = makedist('Normal',mu,sigma);
 x = [-1:0.001:1];
-cdf_normal = cdf(pd,x);
-plot(x,cdf_normal)
+ecdf(Returns)
 hold on
 a = makedist('tLocationScale','mu',0,'sigma',0.0133,'nu',4.0343);
 cdf_t = cdf(a,x);
